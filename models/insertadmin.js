@@ -3,7 +3,7 @@ import User from "./signupSchema.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-const url = "mongodb+srv://SaqibYounas:ITcompany3072@itcompany.jlr7bus.mongodb.net/userDB";
+const url = "";
 
 mongoose
   .connect(url, {

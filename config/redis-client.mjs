@@ -18,11 +18,13 @@
 
 
 
-import { Redis } from '@upstash/redis'
-const redis = new Redis({
-  url: 'https://tender-penguin-34029.upstash.io',
-  token: 'AYTtAAIncDI4ZjA0MDkwM2JiYjM0MWQ1YjJhMTk4ZTBlNjhhZmZkMXAyMzQwMjk',
-})
+import 'dotenv/config';
+import { Redis } from '@upstash/redis';
 
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL,
+  token: process.env.UPSTASH_REDIS_TOKEN,
+});
 
 export default redis;
+
