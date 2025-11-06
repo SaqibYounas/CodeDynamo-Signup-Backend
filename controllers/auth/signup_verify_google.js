@@ -144,11 +144,19 @@ import sendVerificationEmail from '../../Services/sendEmailOTP.js';
 import signupDataSaveDB from "./signupSaveDB.js";
 import { RESPONSE_MESSAGES,  } from '../../constants/messages.js';
 import {STATUS_CODES} from '../../constants/statusCodes.js'
+import { getUserBucket } from "../../utils/tokenBucket.js"; 
 // ---------------- SIGNUP ----------------
 export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const emailKey = email.toLowerCase();
+
+   const bucket = getUserBucket(emailKey);
+    if (!bucket.tryRemoveToken()) {
+      return res.status(STATUS_CODES.TOO_MANY_REQUESTS).json({
+        message: RESPONSE_MESSAGES.TOO_MANY_REQUESTS,
+      });
+    }
 
     const existingUser = await User.findOne({ email: emailKey });
     if (existingUser) {

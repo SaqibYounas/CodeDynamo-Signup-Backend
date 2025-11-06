@@ -16,5 +16,7 @@ export const RESPONSE_MESSAGES = {
   SAVE_UPDATE_ERROR: "❌ Error during saving or update",
   USER_NOT_FOUND: "User not found",
   GOOGLE_LOGIN_FAILED: "Google login failed",
+  TOO_MANY_REQUESTS: "Too many requests. Please wait a moment before trying again.",
+
 };
 
