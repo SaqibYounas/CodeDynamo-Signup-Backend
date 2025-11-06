@@ -1,12 +1,17 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+import { RESPONSE_MESSAGES } from "../constants/jwt.js";
+import {STATUS_CODES} from '../../constants/statusCodes.js'
+
 const { verify } = jwt;
 
 // ---------------- Verify Token ----------------
 const jwtAuthMiddleware = (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies?.token;
 
   if (!token) {
-    return res.status(401).json({ message: "No token found. Please login." });
+    return res
+      .status(STATUS_CODES.UNAUTHORIZED)
+      .json({ message: RESPONSE_MESSAGES.TOKEN_MISSING });
   }
 
   try {
@@ -14,11 +19,10 @@ const jwtAuthMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    return res.status(403).json({ message: "Invalid or expired token." });
+    return res
+      .status(STATUS_CODES.FORBIDDEN)
+      .json({ message: RESPONSE_MESSAGES.TOKEN_INVALID });
   }
 };
-
-
-
 
 export default jwtAuthMiddleware;

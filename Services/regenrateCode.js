@@ -1,20 +1,30 @@
-import sendVerificationEmail from './sendEmailOTP.js'
+import sendVerificationEmail from './sendEmailOTP.js';
+import { MESSAGES } from '../constants/regenerateCode.js';
+import { STATUS_CODES } from '../constants/statusCodes.js';
 
 export async function RegenerateOTP(req, res) {
-    console.log("Aya email ma regnerate")
-    try {
-        let { email } = req.body;
-        let sendEmailAgain = await sendVerificationEmail(email);
-        console.log(sendEmailAgain)
-        if (sendEmailAgain) {
-            return res.status(200).json({ message: "OTP Again Send on your Email" });
-        }
-        else {
-            return res.status(500).json({ message: "Server Error Signup Again !Thanks" });
+  console.log("Aya email ma regenerate");
 
-        }
-    } catch (error) {
-        return res.status(500).json({ message: "Server Error Signup Again !Thanks" });
+  try {
+    const { email } = req.body;
+    const sendEmailAgain = await sendVerificationEmail(email);
+
+    console.log(sendEmailAgain);
+
+    if (sendEmailAgain) {
+      return res
+        .status(STATUS_CODES.OK)
+        .json({ message: MESSAGES.SUCCESS });
+    } else {
+      return res
+        .status(STATUS_CODES.SERVER_ERROR)
+        .json({ message: MESSAGES.SERVER_ERROR });
     }
 
+  } catch (error) {
+    console.error("Error in RegenerateOTP:", error);
+    return res
+      .status(STATUS_CODES.SERVER_ERROR)
+      .json({ message: MESSAGES.SERVER_ERROR });
+  }
 }

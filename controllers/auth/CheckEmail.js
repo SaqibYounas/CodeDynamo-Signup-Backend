@@ -1,35 +1,41 @@
 import signupModule from '../../models/signupSchema.js';
+import { RESPONSE_MESSAGES } from '../../constants/messages.js';
+import { STATUS_CODES } from '../../constants/statusCodes.js';
+
 const { User } = signupModule;
 
 // ---------------- Check Email Existing ----------------
 export const checkEmail = async (req, res) => {
   try {
     const { emailkey } = req.body;
-
     const user = await User.findOne({ email: emailkey });
 
     if (!user) {
-      return res.status(200).json({ exists: false, message: "Not registered Email! Please Signup." });
-    }
-    if (user.googleId) {
-      return res.status(200).json({
-        exists: true,
-        googleAccount: true,
-        message: "This user is registered via Google. Please set a website password first.",
+      return res.status(STATUS_CODES.OK).json({
+        exists: false,
+        message: RESPONSE_MESSAGES.EMAIL_NOT_FOUND,
       });
     }
-    return res.status(200).json({
+
+    if (user.googleId) {
+      return res.status(STATUS_CODES.OK).json({
+        exists: true,
+        googleAccount: true,
+        message: RESPONSE_MESSAGES.GOOGLE_ACCOUNT,
+      });
+    }
+
+    return res.status(STATUS_CODES.OK).json({
       exists: true,
       googleAccount: false,
-      message: "Email Found",
+      message: RESPONSE_MESSAGES.EMAIL_FOUND,
     });
 
   } catch (error) {
     console.error("checkEmail error:", error);
-    return res.status(500).json({
+    return res.status(STATUS_CODES.SERVER_ERROR).json({
       exists: false,
-      message: "Server error. Try Again!",
+      message: RESPONSE_MESSAGES.SERVER_ERROR,
     });
   }
 };
-
